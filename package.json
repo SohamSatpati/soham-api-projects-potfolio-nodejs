@@ -1,24 +1,33 @@
 {
-	"name": "fcc-api-projects-boilerplate",
-	"version": "0.0.1",
-	"description": "An FCC Backend Challenge",
-	"main": "server.js",
-	"scripts": {
-		"start": "node server.js"
-	},
-	"dependencies": {
-		"express": "^4.12.4",
-		"cors": "^2.8.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://githost.com/camper/repo.git"
-	},
-	"keywords": [
-		"node",
-		"hyperdev",
-		"express",
-		"freecodecamp"
-	],
-	"license": "MIT"
+  "name": "soham-api-projects-potfolio-nodejs",
+  "version": "0.0.1",
+  "description": "Soham Satpati An FCC Backend Challenge WebApp",
+  "engines": {
+    "node": "14.x"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.15.2",
+    "cors": "^2.8.0"
+  },
+  "devDependencies": {
+    "got": "^11.3.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SohamSatpati/portfolio-node-js"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "hyperdev",
+    "express",
+    "freecodecamp"
+  ],
+  "license": "MIT"
 }
