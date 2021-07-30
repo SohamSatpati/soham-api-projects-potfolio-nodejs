@@ -36,23 +36,23 @@ app.get('/api', function (req, res) {
 //your valid Date API
 app.get('/api/:date?', function (req, res) {
   let dateString = req.params.date;
-  console.log(dateString, dateString.length);
+
   if (dateString.length <= 10) {
     let passedValue = new Date(dateString);
-    if (passedValue === 'Invalid Date') {
+
+    if (passedValue == 'Invalid Date') {
       res.json({ error: 'Invalid Date' });
     } else {
       res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
     }
   } else {
-    let passedValue = new Date(Number(dateString));
-    if (passedValue === 'Invalid Date') {
-      res.json({ error: 'Invalid Date' });
-    } else {
-      res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
-    }
+    let passedValue = parseInt(dateString);
+    passedValue = new Date(passedValue);
+
+    res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
   }
 });
+
 // listen for requests :)
 var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
