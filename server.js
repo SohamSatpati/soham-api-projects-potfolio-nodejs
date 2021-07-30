@@ -36,7 +36,7 @@ app.get('/api', function (req, res) {
 //your valid Date API
 app.get('/api/:date_string?', function (req, res) {
   let dateString = req.params.date_string;
-  /*
+
   // dateString starts with 5 digits, treat it as timestamp
   if (/^\d{5,}/.test(dateString)) {
     const timestamp = +dateString;
@@ -60,22 +60,6 @@ app.get('/api/:date_string?', function (req, res) {
     unix: dateObj.getTime(),
     utc: dateObj.toUTCString(),
   });
-  */
-
-  if (dateString.length <= 10) {
-    let passedValue = new Date(dateString);
-
-    if (passedValue == 'Invalid Date') {
-      res.json({ error: 'Invalid Date' });
-    } else {
-      res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
-    }
-  } else {
-    let passedValue = parseInt(dateString);
-    passedValue = new Date(passedValue);
-
-    res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
-  }
 });
 
 // listen for requests :)
