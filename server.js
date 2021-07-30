@@ -20,9 +20,27 @@ app.get('/', function (req, res) {
 
 // your first API endpoint...
 app.get('/api/hello', function (req, res) {
+  console.log({ greeting: 'hello API' });
   res.json({ greeting: 'hello API' });
 });
 
+//your timestamp API
+app.get('/api/:date?', function (req, res) {
+  let dateString = req.params.date;
+  let passedValue = new Date(dateString);
+
+  if (passedValue === 'Invalid Date') {
+    res.json({ error: 'Invalid Date' });
+  } else {
+    res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
+  }
+  // if (passedValueStr) {
+  //   res.json({
+  //     unix: passedValueStr.getTime(),
+  //     utc: passedValueStr.toUTCString(),
+  //   });
+  // }
+});
 // listen for requests :)
 var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
