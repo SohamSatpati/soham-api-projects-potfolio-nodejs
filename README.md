@@ -1,2 +1,7 @@
+# Microservices and API project for FCC
 
-# [Timestamp Microservice](https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/timestamp-microservice)
+### Description:
+
+This is a porfolio application which displays the API and Microservices project as a part of the Free Code Camp Curriculam.
+
+# [Timestamp Microservice Link](https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/timestamp-microservice)
