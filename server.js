@@ -18,18 +18,23 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-//timestamp routing
-app.get('/timestamp', function (req, res) {
-  res.sendFile(__dirname + '/views/timestamp.html');
-});
-
 // your first API endpoint...
 app.get('/api/hello', function (req, res) {
   console.log({ greeting: 'hello API' });
   res.json({ greeting: 'hello API' });
 });
 
-//your empty API
+//requestHeader parser routing
+app.get('/requestHeaderPerser', function (req, res) {
+  res.sendFile(__dirname + '/views/requestHeaderPerser.html');
+});
+
+//timestamp routing
+app.get('/timestamp', function (req, res) {
+  res.sendFile(__dirname + '/views/timestamp.html');
+});
+
+//your empty date API
 app.get('/api', function (req, res) {
   let now = new Date();
   res.json({
@@ -39,8 +44,9 @@ app.get('/api', function (req, res) {
 });
 
 //your valid Date API
-app.get('/api/:date_string?', function (req, res) {
+app.get('/api/timestamp/:date_string?', function (req, res) {
   let dateString = req.params.date_string;
+  console.log(dateString);
 
   // dateString starts with 5 digits, treat it as timestamp
   if (/^\d{5,}/.test(dateString)) {
@@ -64,6 +70,16 @@ app.get('/api/:date_string?', function (req, res) {
   return res.json({
     unix: dateObj.getTime(),
     utc: dateObj.toUTCString(),
+  });
+});
+
+app.get('/api/whoami', function (req, res) {
+  console.log(req.ip);
+  res.json({
+    value: 'i am soham',
+    ipaddress: req.ip,
+    language: req.headers['accept-language'],
+    software: req.headers['user-agent'],
   });
 });
 
