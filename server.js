@@ -34,23 +34,31 @@ app.get('/api', function (req, res) {
 });
 
 //your valid Date API
-app.get('/api/:date?', function (req, res) {
-  let date_string = req.params.date;
+app.get('/api/:date_string?', function (req, res) {
+  let dateString = req.params.date_string;
+  // dateString starts with 5 digits, treat it as timestamp
+  if (/^\d{5,}/.test(dateString)) {
+    const timestamp = +dateString;
 
-  if (date_string.length <= 10) {
-    let passedValue = new Date(date_string);
-
-    if (passedValue == 'Invalid Date') {
-      res.json({ error: 'Invalid Date' });
-    } else {
-      res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
-    }
-  } else {
-    let passedValue = parseInt(date_string);
-    passedValue = new Date(passedValue);
-
-    res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
+    return res.json({
+      unix: timestamp,
+      utc: new Date(timestamp).toUTCString(),
+    });
   }
+
+  // Try to convert dateString to Date object
+  const dateObj = new Date(dateString);
+
+  // Invalid format provided
+  if (dateObj.toString() === 'Invalid Date') {
+    return res.json({ error: 'Invalid Date' });
+  }
+
+  // Correct format, return values for given date
+  return res.json({
+    unix: dateObj.getTime(),
+    utc: dateObj.toUTCString(),
+  });
 });
 
 // listen for requests :)
