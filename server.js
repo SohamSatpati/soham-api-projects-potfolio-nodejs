@@ -24,22 +24,34 @@ app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-//your timestamp API
+//your empty API
+app.get('/api', function (req, res) {
+  let now = new Date();
+  res.json({
+    unix: now.getTime(),
+    utc: now.toUTCString(),
+  });
+});
+
+//your valid Date API
 app.get('/api/:date?', function (req, res) {
   let dateString = req.params.date;
-  let passedValue = new Date(dateString);
-
-  if (passedValue === 'Invalid Date') {
-    res.json({ error: 'Invalid Date' });
+  console.log(dateString, dateString.length);
+  if (dateString.length <= 10) {
+    let passedValue = new Date(dateString);
+    if (passedValue === 'Invalid Date') {
+      res.json({ error: 'Invalid Date' });
+    } else {
+      res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
+    }
   } else {
-    res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
+    let passedValue = new Date(Number(dateString));
+    if (passedValue === 'Invalid Date') {
+      res.json({ error: 'Invalid Date' });
+    } else {
+      res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
+    }
   }
-  // if (passedValueStr) {
-  //   res.json({
-  //     unix: passedValueStr.getTime(),
-  //     utc: passedValueStr.toUTCString(),
-  //   });
-  // }
 });
 // listen for requests :)
 var listener = app.listen(port, function () {
