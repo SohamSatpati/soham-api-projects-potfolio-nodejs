@@ -35,10 +35,10 @@ app.get('/api', function (req, res) {
 
 //your valid Date API
 app.get('/api/:date?', function (req, res) {
-  let dateString = req.params.date;
+  let date_string = req.params.date;
 
-  if (dateString.length <= 10) {
-    let passedValue = new Date(dateString);
+  if (date_string.length <= 10) {
+    let passedValue = new Date(date_string);
 
     if (passedValue == 'Invalid Date') {
       res.json({ error: 'Invalid Date' });
@@ -46,7 +46,7 @@ app.get('/api/:date?', function (req, res) {
       res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
     }
   } else {
-    let passedValue = parseInt(dateString);
+    let passedValue = parseInt(date_string);
     passedValue = new Date(passedValue);
 
     res.json({ unix: passedValue.getTime(), utc: passedValue.toUTCString() });
