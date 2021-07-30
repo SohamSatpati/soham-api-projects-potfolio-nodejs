@@ -76,7 +76,6 @@ app.get('/api/timestamp/:date_string?', function (req, res) {
 app.get('/api/whoami', function (req, res) {
   console.log(req.ip);
   res.json({
-    value: 'i am soham',
     ipaddress: req.ip,
     language: req.headers['accept-language'],
     software: req.headers['user-agent'],
