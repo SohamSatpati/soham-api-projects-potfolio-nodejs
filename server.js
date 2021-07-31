@@ -137,7 +137,7 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-app.post('/api/shorturl/new', async function (req, res) {
+app.post('/api/shorturl/new', function (req, res) {
   const client_requested_url = req.body.url;
   console.log('url:=>', client_requested_url);
   let suffix = shortid.generate();
@@ -149,36 +149,43 @@ app.post('/api/shorturl/new', async function (req, res) {
     });
   } else {
     //check if its already in the database
-    try {
-      let findOne = await URLShortenerModel.findOne({
-        original_url: client_requested_url,
-      });
-      if (findOne) {
-        res.json({
-          original_url: findOne.original_url,
-          short_url: findOne.short_url,
-        });
-      } else {
-        //if its not exist then create new one and response the result
-        //Store all key-value pairs for URLShortener schema
-        let newURL = new URLShortenerModel({
-          short_url: suffix,
-          original_url: client_requested_url,
-        });
-        //Save the data and response back to the client
-        await newURL.save();
-        console.log('document inserted successfully');
-        //done(null, data);
-        //response to the client
-        res.json({
-          original_url: newURL.original_url,
-          short_url: newURL.short_url,
-        });
+    URLShortenerModel.findOne(
+      { original_url: client_requested_url },
+      (err, data) => {
+        console.log('response from db', data);
+        try {
+          if (data) {
+            res.json({
+              original_url: data.original_url,
+              short_url: data.short_url,
+            });
+          } else {
+            //if its not exist then create new one and response the result
+            //Store all key-value pairs for URLShortener schema
+            let newURL = new URLShortenerModel({
+              short_url: suffix,
+              original_url: client_requested_url,
+            });
+            //Save the data and response back to the client
+            newURL.save((err, data) => {
+              try {
+                console.log('document inserted successfully');
+                //done(null, data);
+                //response to the client
+                res.json({
+                  original_url: newURL.original_url,
+                  short_url: newURL.short_url,
+                });
+              } catch (err) {
+                console.error(err);
+              }
+            });
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json('Server Error');
-    }
+    );
   }
 });
 
@@ -186,20 +193,22 @@ app.post('/api/shorturl/new', async function (req, res) {
 
 //get request for shortenURL
 
-app.get('/api/shorturl/:short_url?', async function (req, res) {
-  try {
-    const urlParams = await URLShortenerModel.findOne({
-      short_url: req.params.short_url,
-    });
-    if (urlParams) {
-      return res.redirect(urlParams.original_url);
-    } else {
-      return res.status(404).json('No URL Found');
+app.get('/api/shorturl/:short_url?', function (req, res) {
+  let userGeneratedSuffix = req.params.short_url;
+  //fetch URL from database matches whether this short url is valid and redirect it
+  URLShortenerModel.find({ short_url: userGeneratedSuffix }).then(function (
+    foundURLs
+  ) {
+    try {
+      let urlToRedirect = foundURLs[0].original_url;
+      res.redirect(`${urlToRedirect}`);
+    } catch (err) {
+      console.error(err);
+      res.json({
+        error: 'invalid url',
+      });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json('Server Error');
-  }
+  });
 });
 
 ////////////////////////////// URL Shortener Microservice End///////////////////////////////
