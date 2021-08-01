@@ -10,11 +10,13 @@ const mongo = require('mongodb');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
 const validUrl = require('valid-url');
+const MONGODBURI =
+  'mongodb+srv://soham990:eDT5IFYQFKlaWP6x@cluster0.43tlj.mongodb.net/test?retryWrites=true&w=majority';
 const app = express();
 let port = process.env.PORT || 5000;
 
 //for localhost dbconnection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(MONGODBURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000,
