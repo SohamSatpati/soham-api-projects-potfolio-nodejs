@@ -139,7 +139,7 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(express.json());
 
-app.post('/api/shorturl/new', function (req, res) {
+app.post('/api/shorturl', function (req, res) {
   const client_requested_url = req.body.url;
   console.log('url:=>', client_requested_url);
   let suffix = shortid.generate();
