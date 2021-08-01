@@ -147,7 +147,7 @@ app.post('/api/shorturl', function (req, res) {
   //check if the url is valid or not
   if (!validUrl.isWebUri(client_requested_url)) {
     res.status(401).json({
-      error: 'Invalid URL',
+      error: 'invalid url',
     });
   } else {
     //check if its already in the database
