@@ -6,11 +6,9 @@ require('dotenv').config();
 // init project
 const express = require('express');
 const mongoose = require('mongoose');
-const mongo = require('mongodb');
 const bodyParser = require('body-parser');
 // const shortid = require('shortid');
 // const validUrl = require('valid-url');
-const 
 
 const app = express();
 let port = process.env.PORT || 5000;
@@ -121,7 +119,6 @@ app.get('/api/whoami', function (req, res) {
 ////////////////////////////// Request Header Parser Microservice End///////////////////////
 
 ////////////////////////////// URL Shortener Microservice Start/////////////////////////////
-
 
 ////////////////////////////// URL Shortener Microservice End///////////////////////////////
 // listen for requests :)
