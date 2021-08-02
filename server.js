@@ -8,15 +8,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mongo = require('mongodb');
 const bodyParser = require('body-parser');
-const shortid = require('shortid');
-const validUrl = require('valid-url');
-const MONGODBURI =
-  'mongodb+srv://soham990:eDT5IFYQFKlaWP6x@cluster0.43tlj.mongodb.net/test?retryWrites=true&w=majority';
+// const shortid = require('shortid');
+// const validUrl = require('valid-url');
+const 
+
 const app = express();
 let port = process.env.PORT || 5000;
 
 //for localhost dbconnection
-mongoose.connect(MONGODBURI, {
+mongoose.connect(process.env['MONGO_URI'], {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000,
@@ -121,100 +121,9 @@ app.get('/api/whoami', function (req, res) {
 ////////////////////////////// Request Header Parser Microservice End///////////////////////
 
 ////////////////////////////// URL Shortener Microservice Start/////////////////////////////
-//create new schema for URLShortener
-const { Schema } = mongoose;
-const urlShortSchema = new Schema({
-  short_url: String,
-  original_url: String,
-  suffix: String,
-});
 
-//create a model
-let URLShortenerModel = mongoose.model('URLShortenerModel', urlShortSchema);
-
-// create application/json parser
-// parse application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: false }));
-
-// parse application/json
-app.use(express.json());
-
-app.post('/api/shorturl', function (req, res) {
-  const client_requested_url = req.body.url;
-  console.log('url:=>', client_requested_url);
-  let suffix = shortid.generate();
-  console.log('Suffix=>', suffix);
-  //check if the url is valid or not
-  if (!validUrl.isWebUri(client_requested_url)) {
-    res.status(401).json({
-      error: 'invalid url',
-    });
-  } else {
-    //check if its already in the database
-    URLShortenerModel.findOne(
-      { original_url: client_requested_url },
-      (err, data) => {
-        console.log('response from db', data);
-        try {
-          if (data) {
-            res.json({
-              original_url: data.original_url,
-              short_url: data.short_url,
-            });
-          } else {
-            //if its not exist then create new one and response the result
-            //Store all key-value pairs for URLShortener schema
-            let newURL = new URLShortenerModel({
-              short_url: suffix,
-              original_url: client_requested_url,
-            });
-            //Save the data and response back to the client
-            newURL.save((err, data) => {
-              try {
-                console.log('document inserted successfully');
-                //done(null, data);
-                //response to the client
-                res.json({
-                  original_url: newURL.original_url,
-                  short_url: newURL.short_url,
-                });
-              } catch (err) {
-                console.error(err);
-              }
-            });
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    );
-  }
-});
-
-//short_url: __dirname + '/api/shorturl/' + suffix,
-
-//get request for shortenURL
-
-app.get('/api/shorturl/:short_url?', function (req, res) {
-  let userGeneratedSuffix = req.params.short_url;
-  //fetch URL from database matches whether this short url is valid and redirect it
-  URLShortenerModel.find({ short_url: userGeneratedSuffix }).then(function (
-    foundURLs
-  ) {
-    try {
-      let urlToRedirect = foundURLs[0].original_url;
-      res.redirect(`${urlToRedirect}`);
-    } catch (err) {
-      console.error(err);
-      res.json({
-        error: 'invalid url',
-      });
-    }
-  });
-});
 
 ////////////////////////////// URL Shortener Microservice End///////////////////////////////
-
 // listen for requests :)
 var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
