@@ -1,4 +1,4 @@
-# Microservices and API project for FCC
+# Microservices and API project of FCC
 
 ### Description:
 
